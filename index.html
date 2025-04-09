@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Countdown Timer</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+    input {
+      font-size: 1rem;
+      padding: 10px;
+      width: 150px;
+      margin-right: 10px;
+    }
+    button {
+      font-size: 1rem;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .timer {
+      font-size: 4rem;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Countdown Timer</h1>
+  <div class="controls">
+    <input id="duration" type="number" placeholder="Minutes">
+    <button id="startTimer">Start Timer</button>
+  </div>
+  <div id="timerDisplay" class="timer"></div>
+
+  <script>
+    const startButton = document.getElementById('startTimer');
+    const durationInput = document.getElementById('duration');
+    const timerDisplay = document.getElementById('timerDisplay');
+    let timerInterval; // to hold the setInterval reference
+
+    function startTimer(durationInMinutes) {
+      let timeRemaining = durationInMinutes * 60; // convert minutes to seconds
+
+      // Clear any existing timer
+      clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.textContent = "Time's up!";
+          return;
+        }
+        // Calculate minutes and seconds
+        let minutes = Math.floor(timeRemaining / 60);
+        let seconds = timeRemaining % 60;
+        // Pad seconds with a leading zero if needed
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        timerDisplay.textContent = `${minutes}:${seconds}`;
+        timeRemaining--;
+      }, 1000);
+    }
+
+    startButton.addEventListener('click', () => {
+      const duration = parseInt(durationInput.value, 10);
+      if (isNaN(duration) || duration <= 0) {
+        alert('Please enter a valid number of minutes.');
+        return;
+      }
+      startTimer(duration);
+    });
+  </script>
+</body>
+</html>
