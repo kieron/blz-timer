@@ -2,72 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Countdown Timer</title>
+  <title>Blaze Countdown</title>
   <style>
+    /* Basic dark theme styles with red highlights */
     body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+    /* Fullscreen canvas for particle effects */
+    #particleCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    /* Container for the title and controls */
+    #setupContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20vh;
     }
     h1 {
       margin-bottom: 20px;
+      font-size: 3rem;
+      color: red;
     }
     .controls {
       margin-bottom: 20px;
     }
     input {
-      font-size: 1rem;
+      font-size: 1.2rem;
       padding: 10px;
       width: 150px;
       margin-right: 10px;
+      background-color: #222;
+      color: #fff;
+      border: 1px solid red;
+      outline: none;
     }
     button {
-      font-size: 1rem;
+      font-size: 1.2rem;
       padding: 10px 20px;
       cursor: pointer;
+      background-color: red;
+      border: none;
+      color: #fff;
     }
-    .timer {
-      font-size: 4rem;
+    #timerDisplay {
+      font-size: 6rem;
       font-weight: bold;
-      color: #333;
+      text-align: center;
+      margin-top: 20vh;
+      color: red;
     }
   </style>
 </head>
 <body>
-  <h1>Countdown Timer</h1>
-  <div class="controls">
-    <input id="duration" type="number" placeholder="Minutes">
-    <button id="startTimer">Start Timer</button>
+  <!-- The canvas for fiery particles -->
+  <canvas id="particleCanvas"></canvas>
+  
+  <!-- Setup container including title and timer input -->
+  <div id="setupContainer">
+    <h1>Blaze Countdown</h1>
+    <div class="controls">
+      <input id="duration" type="number" placeholder="Minutes">
+      <button id="startTimer">Start Timer</button>
+    </div>
   </div>
-  <div id="timerDisplay" class="timer"></div>
-
+  
+  <!-- Timer display element -->
+  <div id="timerDisplay"></div>
+  
   <script>
+    // Timer functionality
     const startButton = document.getElementById('startTimer');
     const durationInput = document.getElementById('duration');
     const timerDisplay = document.getElementById('timerDisplay');
-    let timerInterval; // to hold the setInterval reference
+    const setupContainer = document.getElementById('setupContainer');
+    let timerInterval;
 
     function startTimer(durationInMinutes) {
       let timeRemaining = durationInMinutes * 60; // convert minutes to seconds
-
-      // Clear any existing timer
       clearInterval(timerInterval);
-
       timerInterval = setInterval(() => {
         if (timeRemaining <= 0) {
           clearInterval(timerInterval);
           timerDisplay.textContent = "Time's up!";
           return;
         }
-        // Calculate minutes and seconds
         let minutes = Math.floor(timeRemaining / 60);
         let seconds = timeRemaining % 60;
-        // Pad seconds with a leading zero if needed
         seconds = seconds < 10 ? '0' + seconds : seconds;
         timerDisplay.textContent = `${minutes}:${seconds}`;
         timeRemaining--;
@@ -80,8 +108,73 @@
         alert('Please enter a valid number of minutes.');
         return;
       }
+      // Hide the setup elements once the timer starts
+      setupContainer.style.display = 'none';
       startTimer(duration);
     });
+
+    // Particle effect: red fiery particles in the background
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Resize the canvas to fill the window
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Create an array of particles
+    const particles = [];
+    const numParticles = 100;
+
+    function createParticle() {
+      return {
+        x: Math.random() * canvas.width,
+        y: canvas.height + Math.random() * 50,
+        size: Math.random() * 3 + 1,
+        speedY: - (Math.random() * 1 + 0.5),
+        speedX: Math.random() * 1 - 0.5,
+        alpha: Math.random() * 0.5 + 0.5,
+        // Random green value for a fiery tint (red to orange spectrum)
+        g: Math.floor(50 + Math.random() * 100)
+      };
+    }
+
+    // Initialize particles
+    for (let i = 0; i < numParticles; i++) {
+      particles.push(createParticle());
+    }
+
+    function updateParticles() {
+      for (let particle of particles) {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.alpha -= 0.005;
+        // Reset particle when it fades out or leaves the top
+        if (particle.alpha <= 0 || particle.y < 0) {
+          Object.assign(particle, createParticle());
+        }
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let particle of particles) {
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255, ${particle.g}, 0, ${particle.alpha})`;
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function animateParticles() {
+      updateParticles();
+      drawParticles();
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
   </script>
 </body>
 </html>
