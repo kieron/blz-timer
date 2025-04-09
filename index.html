@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Blaze Countdown</title>
   <!-- Google Font: Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Codystar:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100vh;
@@ -12,7 +12,7 @@
     }
     /* Dark theme settings */
     body {
-      font-family: 'Codystar', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       background-color: #232323;
       color: #fff;
       overflow: hidden;
@@ -73,6 +73,18 @@
       transform: translate(-50%, -50%);
       text-align: center;
     }
+    /* Fireworks container */
+    .firework {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .firework-particle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body>
@@ -101,13 +113,80 @@
     const setupContainer = document.getElementById('setupContainer');
     let timerInterval;
 
+    // Fireworks functionality
+    function createFirework(x, y) {
+      const firework = document.createElement('div');
+      firework.className = 'firework';
+      firework.style.left = `${x}px`;
+      firework.style.top = `${y}px`;
+      document.body.appendChild(firework);
+      
+      // Create particles
+      const colors = ['#ff0000', '#ffff00', '#ff9900', '#ff00ff', '#00ffff', '#00ff00'];
+      const particleCount = 100;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'firework-particle';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        firework.appendChild(particle);
+        
+        // Random direction
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 5;
+        let vx = Math.cos(angle) * speed;
+        let vy = Math.sin(angle) * speed;
+        
+        // Animation
+        let opacity = 1;
+        let posX = 0;
+        let posY = 0;
+        let gravity = 0.05;
+        
+        const animate = () => {
+          posX += vx;
+          posY += vy;
+          vy += gravity; // Add gravity effect
+          opacity -= 0.01;
+          
+          particle.style.transform = `translate(${posX}px, ${posY}px)`;
+          particle.style.opacity = opacity;
+          
+          if (opacity > 0) {
+            requestAnimationFrame(animate);
+          } else {
+            particle.remove();
+            // Remove firework container if empty
+            if (firework.children.length === 0) {
+              firework.remove();
+            }
+          }
+        };
+        
+        requestAnimationFrame(animate);
+      }
+    }
+    
+    function launchFireworks() {
+      // Launch multiple fireworks
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight * 0.5;
+          createFirework(x, y);
+        }, i * 300);
+      }
+    }
+
     function startTimer(durationInMinutes) {
       let timeRemaining = durationInMinutes * 60; // convert minutes to seconds
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         if (timeRemaining <= 0) {
           clearInterval(timerInterval);
-          timerDisplay.textContent = "Time's up!";
+          timerDisplay.textContent = "Draw Time!";
+          // Launch fireworks when timer completes
+          launchFireworks();
           return;
         }
         let minutes = Math.floor(timeRemaining / 60);
