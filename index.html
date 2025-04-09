@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Blaze Countdown</title>
-  <!-- Google Font -->
+  <!-- Google Font: Roboto -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* Dark theme settings */
@@ -13,6 +13,7 @@
       background-color: #232323;
       color: #fff;
       overflow: hidden;
+      position: relative;
     }
     /* tsParticles container fills the entire background */
     #tsparticles {
@@ -43,10 +44,10 @@
       padding: 10px;
       width: 150px;
       margin-right: 10px;
-      background-color: #333;
-      color: #fff;
       border: 1px solid #e32618;
+      color: #fff;
       outline: none;
+      background: #ff000000;
     }
     button {
       font-size: 1.2rem;
@@ -56,12 +57,16 @@
       border: none;
       color: #fff;
     }
+    /* Timer display styling: 10rem sized text, centered on screen */
     #timerDisplay {
-      font-size: 6rem;
+      font-size: 10rem;
       font-weight: bold;
-      text-align: center;
-      margin-top: 20vh;
       color: #e32618;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
     }
   </style>
 </head>
