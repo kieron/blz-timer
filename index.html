@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>Blaze Countdown</title>
   <!-- Google Font: Roboto -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anta&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  
   <style>
     html, body {
       height: 100vh;
@@ -12,7 +13,9 @@
     }
     /* Dark theme settings */
     body {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: "Anta", sans-serif;
+      font-weight: 400;
+      font-style: normal;
       background-color: #232323;
       color: #fff;
       overflow: hidden;
@@ -204,7 +207,7 @@
       timerInterval = setInterval(() => {
         if (timeRemaining <= 0) {
           clearInterval(timerInterval);
-          timerDisplay.textContent = "Draw Time!";
+          timerDisplay.textContent = "Ready!";
           // Launch fireworks when timer completes
           launchFireworks();
           return;
