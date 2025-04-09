@@ -3,23 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Blaze Countdown</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Basic dark theme styles with red highlights */
+    /* Dark theme settings */
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
+      font-family: 'Montserrat', sans-serif;
+      background-color: #232323;
       color: #fff;
       overflow: hidden;
     }
-    /* Fullscreen canvas for particle effects */
-    #particleCanvas {
+    /* tsParticles container fills the entire background */
+    #tsparticles {
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
       z-index: -1;
     }
-    /* Container for the title and controls */
+    /* Setup container styling */
     #setupContainer {
       display: flex;
       flex-direction: column;
@@ -29,7 +33,7 @@
     h1 {
       margin-bottom: 20px;
       font-size: 3rem;
-      color: red;
+      color: #e32618;
     }
     .controls {
       margin-bottom: 20px;
@@ -39,16 +43,16 @@
       padding: 10px;
       width: 150px;
       margin-right: 10px;
-      background-color: #222;
+      background-color: #333;
       color: #fff;
-      border: 1px solid red;
+      border: 1px solid #e32618;
       outline: none;
     }
     button {
       font-size: 1.2rem;
       padding: 10px 20px;
       cursor: pointer;
-      background-color: red;
+      background-color: #e32618;
       border: none;
       color: #fff;
     }
@@ -57,15 +61,15 @@
       font-weight: bold;
       text-align: center;
       margin-top: 20vh;
-      color: red;
+      color: #e32618;
     }
   </style>
 </head>
 <body>
-  <!-- The canvas for fiery particles -->
-  <canvas id="particleCanvas"></canvas>
+  <!-- tsParticles container -->
+  <div id="tsparticles"></div>
   
-  <!-- Setup container including title and timer input -->
+  <!-- Setup elements for timer input -->
   <div id="setupContainer">
     <h1>Blaze Countdown</h1>
     <div class="controls">
@@ -74,9 +78,11 @@
     </div>
   </div>
   
-  <!-- Timer display element -->
+  <!-- Timer display -->
   <div id="timerDisplay"></div>
-  
+
+  <!-- tsParticles library -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script>
     // Timer functionality
     const startButton = document.getElementById('startTimer');
@@ -113,68 +119,25 @@
       startTimer(duration);
     });
 
-    // Particle effect: red fiery particles in the background
-    const canvas = document.getElementById('particleCanvas');
-    const ctx = canvas.getContext('2d');
-
-    // Resize the canvas to fill the window
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Create an array of particles
-    const particles = [];
-    const numParticles = 100;
-
-    function createParticle() {
-      return {
-        x: Math.random() * canvas.width,
-        y: canvas.height + Math.random() * 50,
-        size: Math.random() * 3 + 1,
-        speedY: - (Math.random() * 1 + 0.5),
-        speedX: Math.random() * 1 - 0.5,
-        alpha: Math.random() * 0.5 + 0.5,
-        // Random green value for a fiery tint (red to orange spectrum)
-        g: Math.floor(50 + Math.random() * 100)
-      };
-    }
-
-    // Initialize particles
-    for (let i = 0; i < numParticles; i++) {
-      particles.push(createParticle());
-    }
-
-    function updateParticles() {
-      for (let particle of particles) {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-        particle.alpha -= 0.005;
-        // Reset particle when it fades out or leaves the top
-        if (particle.alpha <= 0 || particle.y < 0) {
-          Object.assign(particle, createParticle());
-        }
-      }
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let particle of particles) {
-        ctx.beginPath();
-        ctx.fillStyle = `rgba(255, ${particle.g}, 0, ${particle.alpha})`;
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    function animateParticles() {
-      updateParticles();
-      drawParticles();
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
+    // Initialize tsParticles for fire effect
+    tsParticles.load("tsparticles", {
+      particles: {
+        number: { value: 200 },
+        color: { value: ["#ff0000", "#ff9900", "#ff3300"] },
+        shape: { type: "circle" },
+        opacity: { value: 0.5, random: true },
+        size: { value: 5, random: true },
+        move: {
+          enable: true,
+          speed: 5,
+          direction: "top",
+          random: true,
+          outModes: { default: "out" },
+        },
+      },
+      background: { color: "transparent" },
+      detectRetina: true,
+    });
   </script>
 </body>
 </html>
