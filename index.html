@@ -62,15 +62,25 @@
       color: #fff;
       border-radius: 5px;
     }
-    /* Timer display styling: 10rem sized text, centered on screen */
+    /* Timer display styling: 12rem sized text, centered on screen */
     #timerDisplay {
-      font-size: 10rem;
+      font-size: 12rem;
       font-weight: bold;
       color: #e32618;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    /* Timer label styling */
+    #timerLabel {
+      font-size: 2rem;
+      color: #fff;
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
     }
     /* Fireworks container */
@@ -96,12 +106,16 @@
     <h1>Blaze Countdown</h1>
     <div class="controls">
       <input id="duration" type="number" placeholder="Minutes">
+      <input id="timerContext" type="text" placeholder="What's this timer for?">
       <button id="startTimer">Start Timer</button>
     </div>
   </div>
   
   <!-- Timer display -->
   <div id="timerDisplay"></div>
+  
+  <!-- Timer label -->
+  <div id="timerLabel"></div>
 
   <!-- tsParticles library -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
@@ -109,7 +123,9 @@
     // Timer functionality
     const startButton = document.getElementById('startTimer');
     const durationInput = document.getElementById('duration');
+    const contextInput = document.getElementById('timerContext');
     const timerDisplay = document.getElementById('timerDisplay');
+    const timerLabel = document.getElementById('timerLabel');
     const setupContainer = document.getElementById('setupContainer');
     let timerInterval;
 
@@ -203,6 +219,13 @@
         alert('Please enter a valid number of minutes.');
         return;
       }
+      
+      // Get the context and display it as a label
+      const context = contextInput.value.trim();
+      if (context) {
+        timerLabel.textContent = context;
+      }
+      
       // Hide the setup elements once the timer starts
       setupContainer.style.display = 'none';
       startTimer(duration);
