@@ -65,27 +65,29 @@
       color: #fff;
       border-radius: 5px;
     }
-    /* Timer display styling: 12rem sized text, centered on screen */
-    #timerDisplay {
-      font-size: 12rem;
-      font-weight: bold;
-      color: #e32618;
+    /* Container for timer and label */
+    #timerContainer {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    /* Timer display styling */
+    #timerDisplay {
+      font-size: 12rem;
+      font-weight: bold;
+      color: #e32618;
       text-align: center;
     }
     /* Timer label styling */
     #timerLabel {
-      font-size: 2rem;
-      color: #fff;
-      position: absolute;
-      top: 70%;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      margin-top: -46px;
+      font-size: 12rem;
+      font-weight: bold;
+      color: #e32618;
+      margin-left: 2rem;
     }
     /* Fireworks container */
     .firework {
@@ -118,11 +120,11 @@
     </div>
   </div>
   
-  <!-- Timer display -->
-  <div id="timerDisplay"></div>
-  
-  <!-- Timer label -->
-  <div id="timerLabel"></div>
+  <!-- Change the timer display structure -->
+  <div id="timerContainer">
+    <div id="timerDisplay"></div>
+    <div id="timerLabel"></div>
+  </div>
 
   <!-- tsParticles library -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
