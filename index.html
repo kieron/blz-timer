@@ -77,14 +77,14 @@
     }
     /* Timer display styling */
     #timerDisplay {
-      font-size: 7rem;
+      font-size: 6rem;
       font-weight: bold;
       color: #e32618;
       text-align: center;
     }
     /* Timer label styling */
     #timerLabel {
-      font-size: 7rem;
+      font-size: 6rem;
       font-weight: bold;
       color: #e32618;
       margin-left: 2rem;
@@ -209,9 +209,10 @@
       timerInterval = setInterval(() => {
         if (timeRemaining <= 0) {
           clearInterval(timerInterval);
-          timerDisplay.textContent = "Ready!";
-          // Launch fireworks when timer completes
-          launchFireworks();
+          // Hide timer container instead of showing "Time's up!"
+          document.getElementById('timerContainer').style.display = 'none';
+          // Launch more fireworks for longer
+          launchMoreFireworks();
           return;
         }
         let minutes = Math.floor(timeRemaining / 60);
@@ -220,6 +221,23 @@
         timerDisplay.textContent = `${minutes}:${seconds}`;
         timeRemaining--;
       }, 1000);
+    }
+
+    // Enhanced fireworks function for longer, more intense display
+    function launchMoreFireworks() {
+      // Launch multiple rounds of fireworks
+      for (let round = 0; round < 5; round++) {
+        setTimeout(() => {
+          // Launch more fireworks in each round
+          for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+              const x = Math.random() * window.innerWidth;
+              const y = Math.random() * window.innerHeight * 0.7;
+              createFirework(x, y);
+            }, i * 200);
+          }
+        }, round * 1500);
+      }
     }
 
     startButton.addEventListener('click', () => {
